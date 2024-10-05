@@ -1,66 +1,96 @@
 package com.example.tele_futbol.Fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.tele_futbol.Adapters.PosicionesAdapter;
+import com.example.tele_futbol.ApiClient;
+import com.example.tele_futbol.Models.Equipo;
+import com.example.tele_futbol.PosicionesApiService;
+import com.example.tele_futbol.PosicionesResponse;
 import com.example.tele_futbol.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PosicionesLiga#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class PosicionesLiga extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView recyclerView;
+    private PosicionesAdapter adapter;
+    private List<Equipo> equiposList; // Lista de equipos
+    private EditText idLigaEditText, temporadaEditText;
+    private Button btnBuscar;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private PosicionesApiService posicionesApiService;
 
-    public PosicionesLiga() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PosicionesLiga.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PosicionesLiga newInstance(String param1, String param2) {
-        PosicionesLiga fragment = new PosicionesLiga();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_posiciones_liga, container, false);
+
+        recyclerView = view.findViewById(R.id.rv);
+        idLigaEditText = view.findViewById(R.id.idLiga);
+        temporadaEditText = view.findViewById(R.id.temporada);
+        btnBuscar = view.findViewById(R.id.btnBuscar);
+
+        // Configurar el RecyclerView
+        equiposList = new ArrayList<>();
+        adapter = new PosicionesAdapter(equiposList, getContext());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Configurar Retrofit
+        posicionesApiService = ApiClient.getClient().create(PosicionesApiService.class);
+
+        // Acción del botón de búsqueda
+        btnBuscar.setOnClickListener(v -> {
+            String idLiga = idLigaEditText.getText().toString().trim();
+            String temporada = temporadaEditText.getText().toString().trim();
+
+            if (!idLiga.isEmpty() && !temporada.isEmpty()) {
+                fetchPosiciones(idLiga, temporada);
+            } else {
+                Toast.makeText(getContext(), "Por favor ingresa el ID de la liga y la temporada", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return view;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_posiciones_liga, container, false);
+    // Método para obtener las posiciones de la liga
+    private void fetchPosiciones(String idLiga, String temporada) {
+        Call<PosicionesResponse> call = posicionesApiService.getPosiciones(idLiga, temporada);
+        call.enqueue(new Callback<PosicionesResponse>() {
+            @Override
+            public void onResponse(Call<PosicionesResponse> call, Response<PosicionesResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    equiposList.clear();
+                    equiposList.addAll(response.body().getTable()); // Obtener la lista de equipos
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(), "No se encontraron posiciones para la liga y temporada especificadas", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PosicionesResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "Error al obtener posiciones", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

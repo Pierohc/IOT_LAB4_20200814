@@ -31,34 +31,50 @@
         <LinearLayout
             android:layout_width="395dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:orientation="horizontal"
-            android:padding="10dp"
+            android:padding="8dp"
             tools:ignore="MissingConstraints">
 
-            <SearchView
-                android:layout_width="75dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:background="#E9E9E9"
-                android:queryHint="Buscar..." />
 
-            <SearchView
-                android:layout_width="75dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
-                android:background="#E9E9E9"
-                android:queryHint="Buscar..." />
 
-            <SearchView
-                android:layout_width="75dp"
+            <EditText
+                android:layout_width="80dp"
                 android:layout_height="30dp"
+                android:hint="idLiga"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
                 android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
-                android:background="#E9E9E9"
-                android:queryHint="Buscar..." />
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:background="@drawable/buscador"
+                />
+
+            <EditText
+                android:layout_marginLeft="10dp"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:hint="Season"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:layout_gravity="center"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:background="@drawable/buscador"
+                />
+
+            <EditText
+                android:layout_marginLeft="10dp"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:hint="Ronda"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:layout_gravity="center"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:background="@drawable/buscador"
+                />
 
             <Button
                 android:layout_width="90dp"
@@ -69,6 +85,12 @@
                 android:textSize="12dp" />
 
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp" />
 
     </LinearLayout>
 
