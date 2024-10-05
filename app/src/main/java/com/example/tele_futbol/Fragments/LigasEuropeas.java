@@ -16,13 +16,10 @@ import android.widget.EditText;
 
 import com.example.tele_futbol.LigasResponseGeneral;
 import com.example.tele_futbol.LigasResponsePorPais;
-import com.example.tele_futbol.Models.Countries;
 
 import com.example.tele_futbol.Adapters.LigasAdapter;
 import com.example.tele_futbol.ApiClient;
-import com.example.tele_futbol.Models.Countries;
 import com.example.tele_futbol.LigasApiService;
-import com.example.tele_futbol.Models.Liga;
 import com.example.tele_futbol.R;
 
 import java.util.ArrayList;
@@ -47,37 +44,30 @@ public class LigasEuropeas extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ligas_europeas, container, false);
 
-        // Inicializar las vistas
         recyclerView = view.findViewById(R.id.rv);
         buscador = view.findViewById(R.id.buscador);
         btnBuscar = view.findViewById(R.id.btnBuscar);
 
-        // Configurar el RecyclerView
         itemList = new ArrayList<>();
-        adapter = new LigasAdapter(itemList, getContext()); // Adaptador que maneja Object
+        adapter = new LigasAdapter(itemList, getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Configurar Retrofit
         ligasApiService = ApiClient.getClient().create(LigasApiService.class);
 
-        // Cargar todas las ligas al inicio
         fetchAllLigas();
-
-        // Acción del botón de búsqueda
         btnBuscar.setOnClickListener(v -> {
             String pais = buscador.getText().toString().trim();
             if (!pais.isEmpty()) {
-                fetchLigasPorPais(pais);  // Llamar a la API para buscar ligas por país
+                fetchLigasPorPais(pais);
             } else {
-                fetchAllLigas();  // Mostrar todas las ligas si no se ingresa un país
+                fetchAllLigas();
             }
         });
 
         return view;
     }
 
-    // Método para obtener todas las ligas de la API
     private void fetchAllLigas() {
         Call<LigasResponseGeneral> call = ligasApiService.getAllLigas();
         call.enqueue(new Callback<LigasResponseGeneral>() {
@@ -85,7 +75,7 @@ public class LigasEuropeas extends Fragment {
             public void onResponse(Call<LigasResponseGeneral> call, Response<LigasResponseGeneral> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     itemList.clear();
-                    itemList.addAll(response.body().getLeagues()); // Añadir ligas a la lista
+                    itemList.addAll(response.body().getLeagues());
                     adapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(getContext(), "Error al obtener ligas", Toast.LENGTH_SHORT).show();
@@ -99,7 +89,6 @@ public class LigasEuropeas extends Fragment {
         });
     }
 
-    // Método para obtener ligas filtradas por país
     private void fetchLigasPorPais(String pais) {
         Call<LigasResponsePorPais> call = ligasApiService.getLigasPorPais(pais);
         call.enqueue(new Callback<LigasResponsePorPais>() {
@@ -107,7 +96,7 @@ public class LigasEuropeas extends Fragment {
             public void onResponse(Call<LigasResponsePorPais> call, Response<LigasResponsePorPais> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     itemList.clear();
-                    itemList.addAll(response.body().getCountries()); // Añadir países a la lista
+                    itemList.addAll(response.body().getCountries());
                     adapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(getContext(), "No se encontraron ligas para el país: " + pais, Toast.LENGTH_SHORT).show();

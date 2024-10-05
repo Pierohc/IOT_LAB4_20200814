@@ -28,10 +28,8 @@ public class AppActivity extends AppCompatActivity {
         Fragment posicionesFragment = new PosicionesLiga();
         Fragment resultadosFragment = new ResultadosPartidos();
 
-        // Mostrar LigasEuropeas por defecto
         replaceFragment(ligasFragment);
 
-        // Manejadores de clic para cambiar los fragmentos
         ligas.setOnClickListener(v -> replaceFragment(ligasFragment));
         posiciones.setOnClickListener(v -> replaceFragment(posicionesFragment));
         resultados.setOnClickListener(v -> replaceFragment(resultadosFragment));

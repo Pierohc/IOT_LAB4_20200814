@@ -32,7 +32,7 @@ public class PosicionesLiga extends Fragment {
 
     private RecyclerView recyclerView;
     private PosicionesAdapter adapter;
-    private List<Equipo> equiposList; // Lista de equipos
+    private List<Equipo> equiposList;
     private EditText idLigaEditText, temporadaEditText;
     private Button btnBuscar;
 
@@ -48,16 +48,13 @@ public class PosicionesLiga extends Fragment {
         temporadaEditText = view.findViewById(R.id.temporada);
         btnBuscar = view.findViewById(R.id.btnBuscar);
 
-        // Configurar el RecyclerView
         equiposList = new ArrayList<>();
         adapter = new PosicionesAdapter(equiposList, getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Configurar Retrofit
         posicionesApiService = ApiClient.getClient().create(PosicionesApiService.class);
 
-        // Acción del botón de búsqueda
         btnBuscar.setOnClickListener(v -> {
             String idLiga = idLigaEditText.getText().toString().trim();
             String temporada = temporadaEditText.getText().toString().trim();
@@ -72,7 +69,6 @@ public class PosicionesLiga extends Fragment {
         return view;
     }
 
-    // Método para obtener las posiciones de la liga
     private void fetchPosiciones(String idLiga, String temporada) {
         Call<PosicionesResponse> call = posicionesApiService.getPosiciones(idLiga, temporada);
         call.enqueue(new Callback<PosicionesResponse>() {
@@ -80,7 +76,7 @@ public class PosicionesLiga extends Fragment {
             public void onResponse(Call<PosicionesResponse> call, Response<PosicionesResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     equiposList.clear();
-                    equiposList.addAll(response.body().getTable()); // Obtener la lista de equipos
+                    equiposList.addAll(response.body().getTable());
                     adapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(getContext(), "No se encontraron posiciones para la liga y temporada especificadas", Toast.LENGTH_SHORT).show();

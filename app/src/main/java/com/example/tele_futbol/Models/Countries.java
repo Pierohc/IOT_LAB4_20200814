@@ -6,7 +6,6 @@ public class Countries {
     private String strLeagueAlternate;
     private String strSport;
 
-    // Getters
     public String getIdLeague() {
         return idLeague;
     }

@@ -15,31 +15,10 @@ import com.example.tele_futbol.Models.Liga;
 import com.example.tele_futbol.R;
 
 import java.util.List;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.List;
-
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.List;
 
 public class LigasAdapter extends RecyclerView.Adapter<LigasAdapter.LigaViewHolder> {
 
-    private List<Object> itemList; // Usar Object para manejar ambos tipos
+    private List<Object> itemList;
     private Context context;
 
     public LigasAdapter(List<Object> itemList, Context context) {

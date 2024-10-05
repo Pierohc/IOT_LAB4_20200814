@@ -6,7 +6,6 @@ public class Liga {
     private String strSport;
     private String strLeagueAlternate;
 
-    // Getters
     public String getIdLeague() {
         return idLeague;
     }

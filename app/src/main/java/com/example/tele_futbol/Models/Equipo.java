@@ -9,9 +9,8 @@ public class Equipo {
     private String intGoalsFor;
     private String intGoalsAgainst;
     private String intGoalDifference;
-    private String strTeamBadge; // URL del ícono del equipo
+    private String strTeamBadge;
 
-    // Getters
     public String getStrTeam() {
         return strTeam;
     }

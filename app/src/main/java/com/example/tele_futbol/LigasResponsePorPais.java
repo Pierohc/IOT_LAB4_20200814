@@ -5,7 +5,7 @@ import com.example.tele_futbol.Models.Countries;
 
 
 public class LigasResponsePorPais {
-    private List<Countries> countries; // Para el segundo GET
+    private List<Countries> countries;
 
     public List<Countries> getCountries() {
         return countries;
